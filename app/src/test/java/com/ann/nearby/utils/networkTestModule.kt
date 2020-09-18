@@ -11,6 +11,7 @@ fun networkTestModule(url: String) = module {
 }
 
 private fun provideRetrofit(url: String): Retrofit = Retrofit.Builder()
+    .addConverterFactory(NullOnEmptyConverterFactory())
     .addConverterFactory(MoshiConverterFactory.create())
     .baseUrl(url)
     .build()

@@ -10,7 +10,7 @@ import retrofit2.http.QueryMap
 
 interface ApiService {
     @GET("venues/search")
-    fun browseNearByRestaurant(@QueryMap filter: Map<String, String>): Response<VenueListResponse>
+    suspend fun browseNearByVenues(@QueryMap filter: Map<String, String>): Response<VenueListResponse>
 
     @GET("venues/{VENUE_ID}")
     fun getVenueDetail(
