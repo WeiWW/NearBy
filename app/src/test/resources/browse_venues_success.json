@@ -1,0 +1,413 @@
+{
+  "meta": {
+    "code": 200,
+    "requestId": "5f64c93f1615644957cfbf57"
+  },
+  "response": {
+    "venues": [
+      {
+        "id": "564f0da6498effb0190adf98",
+        "name": "三角冰",
+        "location": {
+          "address": "羅斯福路五段170巷10號",
+          "lat": 25.004613856077114,
+          "lng": 121.53812292774732,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.004613856077114,
+              "lng": 121.53812292774732
+            }
+          ],
+          "distance": 176,
+          "postalCode": "116",
+          "cc": "TW",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路五段170巷10號",
+            "116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "4bf58dd8d48988d1c9941735",
+            "name": "Ice Cream Shop",
+            "pluralName": "Ice Cream Shops",
+            "shortName": "Ice Cream",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/icecream_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "4ec7879fb8f758db74403ce0",
+        "name": "50嵐",
+        "location": {
+          "address": "羅斯福路五段217號",
+          "lat": 25.002161398894046,
+          "lng": 121.53922763244663,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.002161398894046,
+              "lng": 121.53922763244663
+            }
+          ],
+          "distance": 270,
+          "postalCode": "116",
+          "cc": "TW",
+          "city": "台北市",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路五段217號",
+            "台北市,  116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "52e81612bcbc57f1066b7a0c",
+            "name": "Bubble Tea Shop",
+            "pluralName": "Bubble Tea Shops",
+            "shortName": "Bubble Tea",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/bubble_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "4bc04a03920eb71320c2182c",
+        "name": "寶島肉圓",
+        "location": {
+          "address": "羅斯福路五段136號",
+          "lat": 25.005871354919783,
+          "lng": 121.5389488714657,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.005871354919783,
+              "lng": 121.5389488714657
+            }
+          ],
+          "distance": 337,
+          "postalCode": "116",
+          "cc": "TW",
+          "city": "文山區",
+          "state": "臺北市",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路五段136號",
+            "文山區, 臺北市 116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "52af3b813cf9994f4e043c04",
+            "name": "Taiwanese Restaurant",
+            "pluralName": "Taiwanese Restaurants",
+            "shortName": "Taiwanese",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/asian_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "52b16410498e6c1d155df7ec",
+        "name": "偵軒日式小火鍋",
+        "location": {
+          "address": "羅斯福路六段28號1,2樓",
+          "lat": 24.999957991051794,
+          "lng": 121.53976285162643,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 24.999957991051794,
+              "lng": 121.53976285162643
+            }
+          ],
+          "distance": 480,
+          "cc": "TW",
+          "city": "文山區",
+          "state": "臺北市",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路六段28號1,2樓",
+            "文山區, 臺北市",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "52af0bd33cf9994f4e043bdd",
+            "name": "Hotpot Restaurant",
+            "pluralName": "Hotpot Restaurants",
+            "shortName": "Hotpot",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/asian_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "56ea02c2498e9f505a04f94d",
+        "name": "美而美",
+        "location": {
+          "lat": 25.002146,
+          "lng": 121.537072,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.002146,
+              "lng": 121.537072
+            }
+          ],
+          "distance": 144,
+          "cc": "TW",
+          "country": "臺灣",
+          "formattedAddress": [
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "4bf58dd8d48988d143941735",
+            "name": "Breakfast Spot",
+            "pluralName": "Breakfast Spots",
+            "shortName": "Breakfast",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/breakfast_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "4c1a3a90b9f876b0be467846",
+        "name": "218無骨鹹酥雞",
+        "location": {
+          "address": "羅斯福路五段218巷7號",
+          "lat": 25.002121696955538,
+          "lng": 121.53836347119558,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.002121696955538,
+              "lng": 121.53836347119558
+            }
+          ],
+          "distance": 204,
+          "postalCode": "116",
+          "cc": "TW",
+          "city": "台北市",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路五段218巷7號",
+            "台北市,  116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "4d4ae6fc7a7b7dea34424761",
+            "name": "Fried Chicken Joint",
+            "pluralName": "Fried Chicken Joints",
+            "shortName": "Fried Chicken",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/friedchicken_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "5c26147a61e53b002c74882b",
+        "name": "滾吧鍋物 QUNBA",
+        "location": {
+          "address": "No.247, Section 5, Roosevelt Rd",
+          "lat": 25.001607,
+          "lng": 121.539355,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.001607,
+              "lng": 121.539355
+            }
+          ],
+          "distance": 317,
+          "postalCode": "116",
+          "cc": "TW",
+          "city": "Wunshan District",
+          "country": "臺灣",
+          "formattedAddress": [
+            "No.247, Section 5, Roosevelt Rd",
+            "Wunshan District,  116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "52af0bd33cf9994f4e043bdd",
+            "name": "Hotpot Restaurant",
+            "pluralName": "Hotpot Restaurants",
+            "shortName": "Hotpot",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/asian_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "4c721940ad69b60cd1be82b9",
+        "name": "臭豆腐、麵線",
+        "location": {
+          "address": "羅斯福路五段263號",
+          "lat": 25.001810233402757,
+          "lng": 121.53931126060846,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.001810233402757,
+              "lng": 121.53931126060846
+            }
+          ],
+          "distance": 299,
+          "postalCode": "116",
+          "cc": "TW",
+          "city": "台北市",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路五段263號",
+            "台北市,  116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "4bf58dd8d48988d142941735",
+            "name": "Asian Restaurant",
+            "pluralName": "Asian Restaurants",
+            "shortName": "Asian",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/asian_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "59baaee26fd62657e49813c7",
+        "name": "遇見 Ice To Meet You",
+        "location": {
+          "address": "臺北市116文山區羅斯福路六段18號",
+          "lat": 25.000084,
+          "lng": 121.53945,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.000084,
+              "lng": 121.53945
+            }
+          ],
+          "distance": 450,
+          "postalCode": "116",
+          "cc": "TW",
+          "city": "文山區",
+          "state": "臺北市",
+          "country": "臺灣",
+          "formattedAddress": [
+            "臺北市116文山區羅斯福路六段18號",
+            "文山區, 臺北市 116",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "4bf58dd8d48988d112941735",
+            "name": "Juice Bar",
+            "pluralName": "Juice Bars",
+            "shortName": "Juice Bar",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/juicebar_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      },
+      {
+        "id": "56ee3a57498eb3c168285dec",
+        "name": "Swan Cafe 天鵝桌遊館",
+        "location": {
+          "address": "羅斯福路五段170巷37號",
+          "lat": 25.004653133922382,
+          "lng": 121.53650845217184,
+          "labeledLatLngs": [
+            {
+              "label": "display",
+              "lat": 25.004653133922382,
+              "lng": 121.53650845217184
+            }
+          ],
+          "distance": 142,
+          "cc": "TW",
+          "country": "臺灣",
+          "formattedAddress": [
+            "羅斯福路五段170巷37號",
+            "臺灣"
+          ]
+        },
+        "categories": [
+          {
+            "id": "4bf58dd8d48988d16d941735",
+            "name": "Café",
+            "pluralName": "Cafés",
+            "shortName": "Café",
+            "icon": {
+              "prefix": "https://ss3.4sqi.net/img/categories_v2/food/cafe_",
+              "suffix": ".png"
+            },
+            "primary": true
+          }
+        ],
+        "referralId": "v-1600440639",
+        "hasPerk": false
+      }
+    ]
+  }
+}

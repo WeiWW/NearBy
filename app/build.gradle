@@ -57,9 +57,22 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.1'
     //Mapbox
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
-    //test
+
+    /*TEST*/
     testImplementation 'junit:junit:4.13'
-    //Android test
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'org.amshove.kluent:kluent-android:1.61'
+    //AndroidX core
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    //kotlin coroutines
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9-native-mt"
+    //MockSever
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.8.1"
+    //Koin test
+    testImplementation "org.koin:koin-test:2.1.6"
+
+
+    /*ANDROID TEST*/
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 

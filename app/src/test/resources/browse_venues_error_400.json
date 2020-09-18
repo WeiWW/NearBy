@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "code": 400,
+    "errorType": "param_error",
+    "errorDetail": "Must provide parameters (ll and radius) or (sw and ne) or (near and radius)",
+    "requestId": "5f6478be3125cf5427083ec4"
+  },
+  "response": {}
+}
