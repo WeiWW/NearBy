@@ -126,8 +126,27 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
 
         launch(Dispatchers.Default) {
             val liveData = repo.getVenueDetail(MOCK_VENUE_ID,MOCK_QUERY_VENUE_DETAIL_MAP).asLiveData()
-            liveData.observeForever{detail:VenueDetail ->
-                detail.id.shouldBeEqualTo(MOCK_VENUE_ID)
+            liveData.observeForever{detail:VenueDetail? ->
+                detail?.id.shouldBeEqualTo(MOCK_VENUE_ID)
+            }
+        }
+
+        yield()
+    }
+
+    @Test
+    fun `get venue detail error`() = runBlocking {
+        enqueue(
+            `mock network response with json file`(
+                HttpURLConnection.HTTP_BAD_REQUEST,
+                "venue_detail_error_400.json"
+            )
+        )
+
+        launch(Dispatchers.Default) {
+            val liveData = repo.getVenueDetail(MOCK_VENUE_ID,MOCK_QUERY_VENUE_DETAIL_MAP).asLiveData()
+            liveData.observeForever{detail:VenueDetail? ->
+                detail?.shouldBeNull()
             }
         }
 

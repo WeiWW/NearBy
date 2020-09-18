@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface VenueRepo {
     suspend fun getVenueList(filter: Map<String, String>): Flow<List<Venue>>
-    suspend fun getVenueDetail(venueId: String, filter: Map<String, String>):Flow<VenueDetail>
+    suspend fun getVenueDetail(venueId: String, filter: Map<String, String>):Flow<VenueDetail?>
 }

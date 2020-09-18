@@ -16,7 +16,7 @@ import org.koin.core.inject
 class VenueRepoImpl:VenueRepo,KoinComponent {
     private val apiService: ApiService by inject()
     private val browseVenuesResults = ConflatedBroadcastChannel<List<Venue>>()
-    private val venueDetailResult = ConflatedBroadcastChannel<VenueDetail>()
+    private val venueDetailResult = ConflatedBroadcastChannel<VenueDetail?>()
 
     @OptIn(FlowPreview::class)
     override suspend fun getVenueList(filter: Map<String, String>): Flow<List<Venue>> {
@@ -34,7 +34,7 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
     }
 
     @OptIn(FlowPreview::class)
-    override suspend fun getVenueDetail(venueId: String, filter: Map<String, String>): Flow<VenueDetail> {
+    override suspend fun getVenueDetail(venueId: String, filter: Map<String, String>): Flow<VenueDetail?> {
         val response = apiService.getVenueDetail(venueId,filter)
         //TODO response error and check network state
         if (response.isSuccessful){
@@ -42,6 +42,8 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
                 val detail = venueDetailResponse.response.venue
                 venueDetailResult.offer(detail)
             }
+        }else{
+            venueDetailResult.offer(null)
         }
         return venueDetailResult.asFlow()
     }
