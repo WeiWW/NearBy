@@ -1,6 +1,7 @@
 package com.ann.nearby
 
 import android.app.Application
+import com.ann.nearby.di.module.networkModule
 import com.ann.nearby.di.module.viewModelModule
 import com.mapbox.mapboxsdk.Mapbox
 import org.koin.android.ext.koin.androidContext
@@ -11,7 +12,7 @@ class App:Application() {
         super.onCreate()
         startKoin{
             androidContext(this@App)
-            modules(listOf(viewModelModule))
+            modules(listOf(viewModelModule, networkModule))
         }
 
         Mapbox.getInstance(
