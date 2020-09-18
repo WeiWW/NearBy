@@ -13,7 +13,7 @@ interface ApiService {
     suspend fun browseNearByVenues(@QueryMap filter: Map<String, String>): Response<VenueListResponse>
 
     @GET("venues/{VENUE_ID}")
-    fun getVenueDetail(
+    suspend fun getVenueDetail(
         @Path("VENUE_ID") venueId: String,
         @QueryMap filter: Map<String, String>
     ): Response<VenueDetailsResponse>

@@ -21,7 +21,9 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import java.net.HttpURLConnection
 import androidx.lifecycle.asLiveData
+import com.ann.nearby.api.baseQueryMap
 import com.ann.nearby.api.response.Venue
+import com.ann.nearby.api.response.VenueDetail
 import org.amshove.kluent.*
 
 @ExperimentalCoroutinesApi
@@ -38,7 +40,9 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
     var coroutineRule = MainCoroutineScopeRule()
 
     private val repo: VenueRepo by inject()
-    private val queryMap = nearByRestaurantQueryMap("25.0034405", "121.5369503", "500")
+    private val MOCK_QUERY_VENUES_MAP = nearByRestaurantQueryMap("25.0034405", "121.5369503", "500")
+    private val MOCK_QUERY_VENUE_DETAIL_MAP = baseQueryMap
+    private val MOCK_VENUE_ID = "4c5ef77bfff99c74eda954d3"
 
     @Before
     override fun setup() {
@@ -64,7 +68,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(queryMap).asLiveData()
+            val liveData = repo.getVenueList(MOCK_QUERY_VENUES_MAP).asLiveData()
             liveData.observeForever { result: List<Venue> ->
                 result.size.shouldBeGreaterThan(0)
             }
@@ -83,7 +87,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(queryMap).asLiveData()
+            val liveData = repo.getVenueList(MOCK_QUERY_VENUES_MAP).asLiveData()
             liveData.observeForever{result:List<Venue> ->
                 result.size.shouldBeEqualTo(0)
             }
@@ -102,9 +106,28 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(queryMap).asLiveData()
+            val liveData = repo.getVenueList(MOCK_QUERY_VENUES_MAP).asLiveData()
             liveData.observeForever{result:List<Venue> ->
                 result.shouldBeEmpty()
+            }
+        }
+
+        yield()
+    }
+
+    @Test
+    fun `get venue detail successfully`() = runBlocking {
+        enqueue(
+            `mock network response with json file`(
+                HttpURLConnection.HTTP_OK,
+                "venue_detail_success.json"
+            )
+        )
+
+        launch(Dispatchers.Default) {
+            val liveData = repo.getVenueDetail(MOCK_VENUE_ID,MOCK_QUERY_VENUE_DETAIL_MAP).asLiveData()
+            liveData.observeForever{detail:VenueDetail ->
+                detail.id.shouldBeEqualTo(MOCK_VENUE_ID)
             }
         }
 
