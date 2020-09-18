@@ -22,9 +22,7 @@ import org.koin.test.inject
 import java.net.HttpURLConnection
 import androidx.lifecycle.asLiveData
 import com.ann.nearby.api.response.Venue
-import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeGreaterThan
-import org.amshove.kluent.shouldNotBe
+import org.amshove.kluent.*
 
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
@@ -88,6 +86,25 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
             val liveData = repo.getVenueList(queryMap).asLiveData()
             liveData.observeForever{result:List<Venue> ->
                 result.size.shouldBeEqualTo(0)
+            }
+        }
+
+        yield()
+    }
+
+    @Test
+    fun `browse nearby restaurants,response error, http 400`() = runBlocking {
+        enqueue(
+            `mock network response with json file`(
+                HttpURLConnection.HTTP_BAD_REQUEST,
+                "browse_venues_error_400.json"
+            )
+        )
+
+        launch(Dispatchers.Default) {
+            val liveData = repo.getVenueList(queryMap).asLiveData()
+            liveData.observeForever{result:List<Venue> ->
+                result.shouldBeEmpty()
             }
         }
 

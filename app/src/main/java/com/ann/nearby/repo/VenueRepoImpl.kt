@@ -24,6 +24,8 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
                 val venueList = venueListResponse.response.venues
                 browseVenuesResults.offer(venueList)
             }
+        }else{
+            browseVenuesResults.offer(emptyList())
         }
         return browseVenuesResults.asFlow()
     }
