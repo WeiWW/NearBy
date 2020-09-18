@@ -22,6 +22,7 @@ import org.koin.test.inject
 import java.net.HttpURLConnection
 import androidx.lifecycle.asLiveData
 import com.ann.nearby.api.response.Venue
+import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeGreaterThan
 import org.amshove.kluent.shouldNotBe
 
@@ -68,6 +69,25 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
             val liveData = repo.getVenueList(queryMap).asLiveData()
             liveData.observeForever { result: List<Venue> ->
                 result.size.shouldBeGreaterThan(0)
+            }
+        }
+
+        yield()
+    }
+
+    @Test
+    fun `browse nearby restaurants, get empty list`() = runBlocking {
+        enqueue(
+            `mock network response with json file`(
+                HttpURLConnection.HTTP_OK,
+                "browse_venues_empty.json"
+            )
+        )
+
+        launch(Dispatchers.Default) {
+            val liveData = repo.getVenueList(queryMap).asLiveData()
+            liveData.observeForever{result:List<Venue> ->
+                result.size.shouldBeEqualTo(0)
             }
         }
 
