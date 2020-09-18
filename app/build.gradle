@@ -33,6 +33,10 @@ android {
         jvmTarget = "1.8"
         freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -69,6 +73,8 @@ dependencies {
     testImplementation "com.squareup.okhttp3:mockwebserver:4.8.1"
     //Koin test
     testImplementation "org.koin:koin-test:2.1.6"
+    //Mockito
+    testImplementation "org.mockito:mockito-core:3.5.6"
 
 
     /*ANDROID TEST*/
