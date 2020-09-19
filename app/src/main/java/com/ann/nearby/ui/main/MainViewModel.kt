@@ -7,6 +7,7 @@ import com.ann.nearby.api.nearByRestaurantQueryMap
 import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.repo.VenueRepo
+import com.mapbox.geojson.Feature
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -14,7 +15,7 @@ class MainViewModel : ViewModel(),KoinComponent {
     private val repo:VenueRepo by inject()
 
     val locationLiveData = MutableLiveData<Location>()
-    val venues:LiveData<List<Venue>> = locationLiveData.switchMap { location:Location ->
+    val venues:LiveData<List<Feature>> = locationLiveData.switchMap { location:Location ->
         liveData {
             val queryMap
                     = nearByRestaurantQueryMap(location.latitude.toString(),location.longitude.toString(),"500")

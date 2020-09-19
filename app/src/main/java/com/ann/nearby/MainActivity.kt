@@ -6,22 +6,29 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.ann.nearby.ui.main.MainViewModel
+import com.ann.nearby.utils.SOURCE_ID
 import com.ann.nearby.utils.buildDefaultMapOptions
 import com.ann.nearby.utils.enableLocationComponent
 import com.ann.nearby.utils.locationEngineRequest
 import com.ann.nearby.utils.registerLocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineResult
+import com.ann.nearby.utils.mapStyle
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.maps.SupportMapFragment
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity(), PermissionsListener,
     LocationEngineCallback<LocationEngineResult> {
     private val TAG = this.javaClass.simpleName
+    private val viewModel: MainViewModel by inject()
     private val MAPFRAGMENT_TAG = "com.mapbox.map"
     private lateinit var mapboxMap: MapboxMap
     private lateinit var permissionsManager: PermissionsManager
@@ -50,8 +57,12 @@ class MainActivity : AppCompatActivity(), PermissionsListener,
         mapFragment?.getMapAsync { mapboxMap ->
             this.mapboxMap = mapboxMap
             mapboxMap.setStyle(
-                Style.LIGHT
+                mapStyle(this)
             ) { style -> enableLocation(mapboxMap, style) }
+        }
+
+        viewModel.venues.observeForever {
+            mapboxMap.style?.getSourceAs<GeoJsonSource>(SOURCE_ID)?.setGeoJson(FeatureCollection.fromFeatures(it))
         }
     }
 
