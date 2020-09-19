@@ -13,4 +13,22 @@
         android:layout_height="match_parent"
         />
 
+    <RelativeLayout
+        android:id="@+id/maker"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent" >
+
+        <TextView
+            android:id="@+id/venueName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

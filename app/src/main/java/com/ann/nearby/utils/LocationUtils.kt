@@ -11,6 +11,7 @@ import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.location.LocationEngineRequest
 import com.mapbox.android.core.location.LocationEngineResult
 import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
@@ -25,7 +26,7 @@ private const val DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L
 private const val DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5
 const val SOURCE_ID = "SOURCE_ID"
 private const val ICON_ID = "ICON_ID"
-private const val LAYER_ID = "LAYER_ID"
+const val LAYER_ID = "LAYER_ID"
 
 fun getLocationsComponentActivationOptions(
     context: Context,
@@ -61,7 +62,7 @@ fun enableLocationComponent(context: Context, mapboxMap: MapboxMap, style: Style
 
 fun buildDefaultMapOptions(context: Context, attrs: AttributeSet?) =
     MapboxMapOptions.createFromAttributes(context, attrs)
-        .camera(CameraPosition.Builder().zoom(12.0).build())
+        .camera(CameraPosition.Builder().zoom(16.0).build())
 
 fun mapStyle(context: Context) = Style.Builder()
     .fromUri(Style.LIGHT)
