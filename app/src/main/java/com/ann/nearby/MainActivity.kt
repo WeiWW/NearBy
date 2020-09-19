@@ -2,18 +2,12 @@ package com.ann.nearby
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ann.nearby.ui.main.MainViewModel
 import com.ann.nearby.utils.SOURCE_ID
 import com.ann.nearby.utils.buildDefaultMapOptions
 import com.ann.nearby.utils.enableLocationComponent
-import com.ann.nearby.utils.locationEngineRequest
-import com.ann.nearby.utils.registerLocationEngineCallback
-import com.mapbox.android.core.location.LocationEngineCallback
-import com.mapbox.android.core.location.LocationEngineResult
 import com.ann.nearby.utils.mapStyle
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -25,8 +19,7 @@ import com.mapbox.mapboxsdk.maps.SupportMapFragment
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity(), PermissionsListener,
-    LocationEngineCallback<LocationEngineResult> {
+class MainActivity : AppCompatActivity(), PermissionsListener{
     private val TAG = this.javaClass.simpleName
     private val viewModel: MainViewModel by inject()
     private val MAPFRAGMENT_TAG = "com.mapbox.map"
@@ -72,7 +65,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener,
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
 
             enableLocationComponent(this, mapboxMap, style)
-            registerLocationEngineCallback(this, locationEngineRequest,this, Looper.getMainLooper())
 
         } else {
             permissionsManager = PermissionsManager(this).apply {
@@ -109,16 +101,6 @@ class MainActivity : AppCompatActivity(), PermissionsListener,
         }
     }
 
-    override fun onSuccess(result: LocationEngineResult) {
-        result.lastLocation?.let {
-            mapboxMap.run {
-                this.locationComponent.forceLocationUpdate(it)
-                Log.d(TAG, "latitude: ${it.latitude}, longitude: ${it.longitude}")
-            }
-        }
-    }
 
-    override fun onFailure(exception: Exception) {
-        Log.d(TAG, exception.toString())
     }
 }

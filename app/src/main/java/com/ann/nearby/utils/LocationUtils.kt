@@ -27,9 +27,11 @@ const val SOURCE_ID = "SOURCE_ID"
 private const val ICON_ID = "ICON_ID"
 private const val LAYER_ID = "LAYER_ID"
 
-fun getLocationsComponentActivationOptions(context: Context, style: Style): LocationComponentActivationOptions
-        = LocationComponentActivationOptions.builder(context,style)
-    .useDefaultLocationEngine(false)
+fun getLocationsComponentActivationOptions(
+    context: Context,
+    style: Style
+): LocationComponentActivationOptions = LocationComponentActivationOptions.builder(context, style)
+    .useDefaultLocationEngine(true)
     .build()
 
 val locationEngineRequest: LocationEngineRequest =
