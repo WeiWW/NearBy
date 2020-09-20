@@ -3,6 +3,8 @@ package com.ann.nearby.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.location.Location
+import android.location.LocationManager
 import android.os.Looper
 import android.util.AttributeSet
 import com.ann.nearby.R
@@ -10,7 +12,9 @@ import com.mapbox.android.core.location.LocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.location.LocationEngineRequest
 import com.mapbox.android.core.location.LocationEngineResult
+import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.modes.CameraMode
@@ -18,6 +22,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.MapboxMapOptions
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
@@ -75,7 +80,27 @@ fun mapStyle(context: Context) = Style.Builder()
                 PropertyFactory.iconIgnorePlacement(true)
             )
     )
-    .withImage(ICON_ID, BitmapFactory.decodeResource(
-        context.resources,
-        R.drawable.mapbox_marker_icon_default
-    ))
+    .withImage(
+        ICON_ID, BitmapFactory.decodeResource(context.resources, R.drawable.mapbox_marker_icon_default
+        )
+    )
+
+fun newSymbol(latitude: Double, longitude: Double): SymbolOptions = SymbolOptions()
+    .withLatLng(LatLng(latitude, longitude))
+    .withIconImage(ICON_ID)
+    .withIconSize(1.0f)
+    .withDraggable(false)
+
+fun locationFormat(latLng: LatLng) = Location(LocationManager.PASSIVE_PROVIDER).apply {
+    this.latitude = latLng.latitude
+    this.longitude = latLng.longitude
+    this.altitude = latLng.altitude
+}
+
+fun latLngFormat(location:Location) = LatLng(location)
+
+fun animateCamera(mapboxMap: MapboxMap,location: Location){
+    val latLng = latLngFormat(location)
+    val position = CameraPosition.Builder().target(latLng).zoom(20.0).tilt(10.0).build()
+    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+}

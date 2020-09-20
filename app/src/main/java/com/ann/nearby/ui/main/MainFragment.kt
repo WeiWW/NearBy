@@ -1,10 +1,7 @@
 package com.ann.nearby.ui.main
 
 import android.annotation.SuppressLint
-import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +9,25 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ann.nearby.BuildConfig
 import com.ann.nearby.R
+import com.ann.nearby.api.response.Location
+import com.ann.nearby.api.response.Venue
+import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.utils.*
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
+import kotlinx.android.synthetic.main.info_cardview.view.*
 import kotlinx.android.synthetic.main.main_fragment.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener{
+class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,MapboxMap.OnMapClickListener {
 
     companion object {
         fun newInstance() = MainFragment()
@@ -35,6 +37,8 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener{
     private val viewModel: MainViewModel by viewModel()
     private lateinit var mapboxMap: MapboxMap
     private lateinit var permissionsManager: PermissionsManager
+    private lateinit var symbolManager: SymbolManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Mapbox.getInstance(
@@ -55,10 +59,39 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener{
         mapView.getMapAsync { mapboxMap ->
             this.mapboxMap = mapboxMap
             mapboxMap.addOnMoveListener(this)
+            mapboxMap.addOnMapClickListener(this)
             mapboxMap.setStyle(
                 mapStyle(requireContext())
             ) { style ->
                 enableLocation(mapboxMap, style)
+
+                symbolManager = SymbolManager(mapView,mapboxMap,style).apply {
+                    this.iconAllowOverlap = true
+                    this.textAllowOverlap = true
+                }
+
+                symbolManager.addClickListener(OnSymbolClickListener { symbol ->
+                    viewModel.queryLiveData.postValue(symbol.latLng)
+                    true
+                })
+            }
+        }
+        viewModel.venues.observeForever {
+            //display venues
+            for (venue in it) {
+                venue.location.let {location: Location ->
+                    symbolManager.create(newSymbol(location.lat, location.lng))
+                }
+            }
+        }
+
+        viewModel.venueDetail.observeForever {
+            it?.let {venueDetail:VenueDetail->
+                venueCard.visibility = View.VISIBLE
+                venueCard.name.text = venueDetail.name
+                venueCard.description.text = venueDetail.categories[0].name
+                venueCard.score.text = venueDetail.rating.toString()
+                venueCard.openTime.text = venueDetail.hours?.status
             }
         }
     }
@@ -69,10 +102,10 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener{
         if (PermissionsManager.areLocationPermissionsGranted(requireContext())) {
 
             enableLocationComponent(requireContext(), mapboxMap, style)
+            //camera focus device current location
             mapboxMap.locationComponent.lastKnownLocation?.let {
-                val latLng = LatLng(it.latitude,it.longitude)
-                val position = CameraPosition.Builder().target(latLng).zoom(13.0).tilt(10.0).build()
-                mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+                animateCamera(mapboxMap,it)
+                viewModel.locationLiveData.postValue(it)
             }
 
         } else {
@@ -110,18 +143,21 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener{
         }
     }
 
-    override fun onMoveBegin(detector: MoveGestureDetector) {}
+    override fun onMoveBegin(detector: MoveGestureDetector) {
+        venueCard.visibility = View.GONE
+    }
 
     override fun onMove(detector: MoveGestureDetector) {}
 
     override fun onMoveEnd(detector: MoveGestureDetector) {
         //TODO: Not query too often
         val latlng = this.mapboxMap.cameraPosition.target
-        val location = Location(LocationManager.PASSIVE_PROVIDER)
-        location.latitude = latlng.latitude
-        location.longitude = latlng.longitude
-        location.altitude = latlng.altitude
-        viewModel.locationLiveData.postValue(location)
+        viewModel.locationLiveData.postValue(locationFormat(latlng))
+    }
+
+    override fun onMapClick(point: LatLng): Boolean {
+        venueCard.visibility = View.GONE
+        return false
     }
 
     override fun onStart() {

@@ -27,7 +27,7 @@ data class VenueDetail(
     val dislike: Boolean,
     val hasMenu: Boolean,
     val hereNow: HereNow,
-    val hours: Hours,
+    val hours: Hours?,
     val id: String,
     val inbox: Inbox,
     val likes: Likes,

@@ -7,4 +7,38 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="venueBase">
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="venueImage" parent="venueBase">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:src">@mipmap/ic_launcher_round</item>
+    </style>
+
+    <style name="venueName" parent="venueBase">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="venueDescription" parent="venueBase">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="venueOpen" parent="venueBase">
+        <item name="android:textColor">@android:color/holo_red_light</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
+    <style name="venueScore" parent="venueBase">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

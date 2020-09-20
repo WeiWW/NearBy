@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/image"
+            style="@style/venueImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/name"
+            style="@style/venueName"
+            android:layout_marginStart="10dp"
+            app:layout_constraintLeft_toRightOf="@id/image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/description"
+            android:text="@string/app_name"/>
+
+        <TextView
+            android:id="@+id/description"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintLeft_toRightOf="@id/image"
+            app:layout_constraintBottom_toTopOf="@id/openTime"
+            android:layout_marginStart="10dp"
+            style="@style/venueDescription"
+            android:lines="1"
+            android:text="description" />
+
+        <TextView
+            android:id="@+id/openTime"
+            app:layout_constraintTop_toBottomOf="@id/description"
+            app:layout_constraintLeft_toRightOf="@id/image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="10dp"
+            style="@style/venueOpen"
+            android:text="not open" />
+
+        <TextView
+            android:id="@+id/score"
+            style="@style/venueScore"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="10dp"
+            android:text="10.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
