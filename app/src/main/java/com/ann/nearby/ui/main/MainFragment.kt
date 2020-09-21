@@ -100,14 +100,14 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
                 venueCard.score.text = venueDetail.rating?.toString()
                 venueCard.openTime.text = venueDetail.hours?.status
 
-                Glide.with(venueCard.image).load(R.mipmap.ic_launcher_round).into(venueCard.image)
+                Glide.with(venueCard.image).load(R.drawable.ic_image).into(venueCard.image)
                 venueDetail.bestPhoto?.let {bestPhoto ->
                     val widthPx = venueCard.image.width
                     val heightPx = venueCard.image.height
                     val imgUrl = bestPhoto.prefix + "${widthPx}x${heightPx}"+bestPhoto.suffix
                     Glide.with(venueCard.image)
                         .load(imgUrl)
-                        .error(R.mipmap.ic_launcher_round)
+                        .error(R.drawable.ic_image)
                         .into(venueCard.image)
                         .clearOnDetach()
                 }
