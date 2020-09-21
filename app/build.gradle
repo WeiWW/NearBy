@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v9:0.9.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-telemetry:6.1.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.5.0'
     //cardView
     implementation "androidx.cardview:cardview:1.0.0"
     //Glide

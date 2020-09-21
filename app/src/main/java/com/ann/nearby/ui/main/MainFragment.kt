@@ -37,6 +37,7 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
     private lateinit var mapboxMap: MapboxMap
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var symbolManager: SymbolManager
+    private var previousCameraPosition:LatLng = LatLng(0.0,0.0,0.0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -162,14 +163,16 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
 
     override fun onMoveBegin(detector: MoveGestureDetector) {
         venueCard.visibility = View.GONE
+        this.previousCameraPosition = this.mapboxMap.cameraPosition.target
     }
 
     override fun onMove(detector: MoveGestureDetector) {}
 
     override fun onMoveEnd(detector: MoveGestureDetector) {
-        //TODO: Not query too often
-        val latlng = this.mapboxMap.cameraPosition.target
-        viewModel.locationLiveData.postValue(locationFormat(latlng))
+        val lastLatlng = this.mapboxMap.cameraPosition.target
+        if (isDistanceLargerHalfRadius(previousCameraPosition,lastLatlng)){
+            viewModel.locationLiveData.postValue(locationFormat(lastLatlng))
+        }
     }
 
     override fun onMapClick(point: LatLng): Boolean {

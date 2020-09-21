@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory
 import android.location.Location
 import android.location.LocationManager
 import com.ann.nearby.R
+import com.ann.nearby.api.RADIUS
+import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -18,6 +20,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.turf.TurfConstants
+import com.mapbox.turf.TurfMeasurement
 
 const val SOURCE_ID = "SOURCE_ID"
 private const val ICON_ID = "ICON_ID"
@@ -76,4 +80,16 @@ fun animateCamera(mapboxMap: MapboxMap,location: Location){
     val latLng = latLngFormat(location)
     val position = CameraPosition.Builder().target(latLng).zoom(16.0).tilt(10.0).build()
     mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+}
+
+fun getPointFromLatlng(latLng: LatLng): Point = Point.fromLngLat(latLng.longitude,latLng.latitude)
+fun getDistanceFromPoints(point1: Point,point2: Point) = TurfMeasurement.distance(point1,point2,
+    TurfConstants.UNIT_METERS
+)
+
+fun isDistanceLargerHalfRadius(previousLatLng: LatLng,lastLatLng: LatLng): Boolean {
+    val previousPoint = getPointFromLatlng(previousLatLng)
+    val lastPoint = getPointFromLatlng(lastLatLng)
+    val distance = getDistanceFromPoints(previousPoint,lastPoint)
+    return (distance > RADIUS /2)
 }
