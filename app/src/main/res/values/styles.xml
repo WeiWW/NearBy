@@ -16,7 +16,7 @@
     <style name="venueImage" parent="venueBase">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">100dp</item>
-        <item name="android:src">@mipmap/ic_launcher_round</item>
+        <item name="android:src">@drawable/ic_image</item>
     </style>
 
     <style name="venueName" parent="venueBase">
@@ -36,7 +36,7 @@
     </style>
 
     <style name="venueScore" parent="venueBase">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">#FFCA28</item>
         <item name="android:textSize">25dp</item>
         <item name="android:textStyle">bold</item>
     </style>

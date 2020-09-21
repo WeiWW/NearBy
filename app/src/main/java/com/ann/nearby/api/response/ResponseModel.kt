@@ -15,31 +15,12 @@ data class Response(
 )
 
 data class Venue(
-    val categories: List<Category>,
     val id: String,
-    val location: Location,
-    val name: String,
-)
-
-data class Category(
-    val icon: Icon,
-    val id: String,
-    val name: String
+    val location: Location
 )
 
 data class Location(
     val distance: Int,
     val lat: Double,
     val lng: Double,
-)
-
-data class Icon(
-    val prefix: String,
-    val suffix: String
-)
-
-data class LabeledLatLng(
-    val label: String,
-    val lat: Double,
-    val lng: Double
 )

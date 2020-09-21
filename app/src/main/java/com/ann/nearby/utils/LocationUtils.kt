@@ -12,7 +12,6 @@ import com.mapbox.android.core.location.LocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.location.LocationEngineRequest
 import com.mapbox.android.core.location.LocationEngineResult
-import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -88,7 +87,7 @@ fun mapStyle(context: Context) = Style.Builder()
 fun newSymbol(latitude: Double, longitude: Double): SymbolOptions = SymbolOptions()
     .withLatLng(LatLng(latitude, longitude))
     .withIconImage(ICON_ID)
-    .withIconSize(1.0f)
+    .withIconSize(1.3f)
     .withDraggable(false)
 
 fun locationFormat(latLng: LatLng) = Location(LocationManager.PASSIVE_PROVIDER).apply {
@@ -101,6 +100,6 @@ fun latLngFormat(location:Location) = LatLng(location)
 
 fun animateCamera(mapboxMap: MapboxMap,location: Location){
     val latLng = latLngFormat(location)
-    val position = CameraPosition.Builder().target(latLng).zoom(20.0).tilt(10.0).build()
+    val position = CameraPosition.Builder().target(latLng).zoom(16.0).tilt(10.0).build()
     mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position))
 }

@@ -13,6 +13,7 @@ import com.ann.nearby.api.response.Location
 import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.utils.*
+import com.bumptech.glide.Glide
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.android.gestures.MoveGestureDetector
@@ -85,13 +86,25 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
             }
         }
 
-        viewModel.venueDetail.observeForever {
+        viewModel.venueDetail.observeForever { it ->
             it?.let {venueDetail:VenueDetail->
                 venueCard.visibility = View.VISIBLE
                 venueCard.name.text = venueDetail.name
-                venueCard.description.text = venueDetail.categories[0].name
-                venueCard.score.text = venueDetail.rating.toString()
+                venueCard.description.text = venueDetail.categories?.get(0)?.name
+                venueCard.score.text = venueDetail.rating?.toString()
                 venueCard.openTime.text = venueDetail.hours?.status
+
+                Glide.with(venueCard.image).load(R.mipmap.ic_launcher_round).into(venueCard.image)
+                venueDetail.bestPhoto?.let {bestPhoto ->
+                    val widthPx = venueCard.image.width
+                    val heightPx = venueCard.image.height
+                    val imgUrl = bestPhoto.prefix + "${widthPx}x${heightPx}"+bestPhoto.suffix
+                    Glide.with(venueCard.image)
+                        .load(imgUrl)
+                        .error(R.mipmap.ic_launcher_round)
+                        .into(venueCard.image)
+                        .clearOnDetach()
+                }
             }
         }
     }

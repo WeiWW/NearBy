@@ -12,15 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/venueCard"
+        layout="@layout/info_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <include
-            android:id="@+id/venueCard"
-            layout="@layout/info_cardview"
-            android:visibility="gone"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

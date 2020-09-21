@@ -16,6 +16,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        vectorDrawables.useSupportLibrary = true
+
         buildConfigField "String","MAPBOX_ACCESS_TOKEN",project.properties["MAPBOX_ACCESS_TOKEN"]?:""
         buildConfigField "String","FOURSQUARE_API_DOMANIN","\"https://api.foursquare.com/v2/\""
         buildConfigField "String","FOURSQUARE_CLIENT_ID", project.properties["FOURSQUARE_CLIENT_ID"]?:""
