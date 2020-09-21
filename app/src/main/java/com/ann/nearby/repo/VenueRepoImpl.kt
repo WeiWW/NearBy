@@ -5,6 +5,7 @@ import com.ann.nearby.api.response.Location
 import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.api.response.VenueDetailsResponse
+import com.ann.nearby.utils.NetworkHelper
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -17,24 +18,27 @@ import org.koin.core.inject
 @ExperimentalCoroutinesApi
 class VenueRepoImpl:VenueRepo,KoinComponent {
     private val apiService: ApiService by inject()
+    private val networkHelper: NetworkHelper by inject()
     private val browseVenuesResults = ConflatedBroadcastChannel<List<Venue>>()
     private val venueDetailResult = ConflatedBroadcastChannel<VenueDetail?>()
     private val cacheVenuesMap:LinkedHashMap<LatLng,Venue> = linkedMapOf()
 
     @OptIn(FlowPreview::class)
     override suspend fun getVenueList(filter: Map<String, String>): Flow<List<Venue>> {
-        val response = apiService.browseNearByVenues(filter)
-        //TODO response error and check network state
-        if (response.isSuccessful){
-            response.body()?.let { venueListResponse ->
-                val venueList = venueListResponse.response.venues
-                addToCache(venueList)
-                browseVenuesResults.offer(venueList)
-            }
-        }else{
-            browseVenuesResults.offer(emptyList())
-        }
+        requestVenueList(filter)
         return browseVenuesResults.asFlow()
+    }
+
+    private suspend fun requestVenueList(filter: Map<String, String>){
+        if (!networkHelper.isNetworkConnected()) return
+
+        val response = apiService.browseNearByVenues(filter)
+        if (!response.isSuccessful || response.body() == null) return
+        response.body()?.let { venueListResponse ->
+            val venueList = venueListResponse.response.venues
+            addToCache(venueList)
+            browseVenuesResults.offer(venueList)
+        }
     }
 
     private fun addToCache(list: List<Venue>){
@@ -52,16 +56,20 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
     override suspend fun getVenueDetail(latLng: LatLng, filter: Map<String, String>): Flow<VenueDetail?> {
         val venue = cacheVenuesMap[latLng]
         venue?.let {
-            val response = apiService.getVenueDetail(it.id, filter)
-            //TODO response error and check network state
-            if (response.isSuccessful){
-                response.body()?.let { venueDetailResponse: VenueDetailsResponse ->
-                    val detail = venueDetailResponse.response.venue
-                    venueDetailResult.offer(detail)
-                }
-            }
+            requestVenueDetail(it,filter)
         }
         return venueDetailResult.asFlow()
+    }
+
+    private suspend fun requestVenueDetail(venue: Venue, filter: Map<String, String>){
+        if (!networkHelper.isNetworkConnected()) return
+
+        val response = apiService.getVenueDetail(venue.id, filter)
+        if (!response.isSuccessful || response.body() == null) return
+        response.body()?.let { venueDetailResponse: VenueDetailsResponse ->
+            val detail = venueDetailResponse.response.venue
+            venueDetailResult.offer(detail)
+        }
     }
 
 }
