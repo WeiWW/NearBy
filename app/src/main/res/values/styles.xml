@@ -41,4 +41,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="focusLocation">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:src">@drawable/ic_gps_fixed</item>
+        <item name="backgroundTint">@android:color/white</item>
+    </style>
+
 </resources>

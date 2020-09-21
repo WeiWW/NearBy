@@ -12,6 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/focusLocation"
+        style="@style/focusLocation"
+        app:layout_constraintBottom_toTopOf="@id/venueCard"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <include
         android:id="@+id/venueCard"
         layout="@layout/info_cardview"

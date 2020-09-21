@@ -77,6 +77,12 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
                 })
             }
         }
+
+        focusLocation.setOnClickListener {
+            mapboxMap.locationComponent.lastKnownLocation?.let {
+                animateCamera(mapboxMap,it)
+            }
+        }
         viewModel.venues.observeForever {
             //display venues
             for (venue in it) {
