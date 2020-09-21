@@ -5,8 +5,6 @@ import com.ann.nearby.api.response.Location
 import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.api.response.VenueDetailsResponse
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -45,18 +43,9 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
                 LatLng(location.lat,location.lng)
             }
             if (!cacheVenuesMap.containsKey(key)){
-                cacheVenuesMap.put(key,venue)
+                cacheVenuesMap[key] = venue
             }
         }
-    }
-
-    private fun transferToFeatures(venueList: List<Venue>): List<Feature> {
-        val featureList = mutableListOf<Feature>()
-        for (venue in venueList){
-            val feature = Feature.fromGeometry(Point.fromLngLat(venue.location.lng, venue.location.lat))
-            featureList.add(feature)
-        }
-        return featureList.toList()
     }
 
     @OptIn(FlowPreview::class)

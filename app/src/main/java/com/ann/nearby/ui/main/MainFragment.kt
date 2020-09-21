@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import com.ann.nearby.BuildConfig
 import com.ann.nearby.R
 import com.ann.nearby.api.response.Location
-import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.utils.*
 import com.bumptech.glide.Glide
@@ -22,7 +21,6 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import kotlinx.android.synthetic.main.info_cardview.view.*
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -92,7 +90,7 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
             }
         }
 
-        viewModel.venueDetail.observeForever { it ->
+        viewModel.venueDetail.observeForever {
             it?.let {venueDetail:VenueDetail->
                 venueCard.visibility = View.VISIBLE
                 venueCard.name.text = venueDetail.name
