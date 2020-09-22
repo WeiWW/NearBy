@@ -7,8 +7,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 fun networkTestModule(url: String) = module {
     single { provideRetrofit(url) }
+    single { provideNetworkHelper() }
     factory { get<Retrofit>().create(ApiService::class.java) }
 }
+private fun provideNetworkHelper(): NetworkHelper = ConnectedNetworkHelper()
 
 private fun provideRetrofit(url: String): Retrofit = Retrofit.Builder()
     .addConverterFactory(NullOnEmptyConverterFactory())

@@ -18,10 +18,6 @@ package com.ann.nearby.utils
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException

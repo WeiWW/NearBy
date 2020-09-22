@@ -41,4 +41,4 @@ object FileUtils {
     }
 }
 
-val MOCK_WEBSERVER_PORT = 8000
+const val MOCK_WEBSERVER_PORT = 8000

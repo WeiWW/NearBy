@@ -1,14 +1,20 @@
 package com.ann.nearby
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.asLiveData
+import com.ann.nearby.api.baseQueryMap
 import com.ann.nearby.api.nearByRestaurantQueryMap
+import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.di.module.venueRepoModule
 import com.ann.nearby.repo.VenueRepo
 import com.ann.nearby.utils.MainCoroutineScopeRule
 import com.ann.nearby.utils.MockSeverBase
 import com.ann.nearby.utils.SyncTaskExecutorRule
 import com.ann.nearby.utils.networkTestModule
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import kotlinx.coroutines.*
+import org.amshove.kluent.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -19,12 +25,8 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
 import org.koin.test.inject
+import org.mockito.Mockito
 import java.net.HttpURLConnection
-import androidx.lifecycle.asLiveData
-import com.ann.nearby.api.baseQueryMap
-import com.ann.nearby.api.response.Venue
-import com.ann.nearby.api.response.VenueDetail
-import org.amshove.kluent.*
 
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
@@ -40,9 +42,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
     var coroutineRule = MainCoroutineScopeRule()
 
     private val repo: VenueRepo by inject()
-    private val MOCK_QUERY_VENUES_MAP = nearByRestaurantQueryMap("25.0034405", "121.5369503", "500")
-    private val MOCK_QUERY_VENUE_DETAIL_MAP = baseQueryMap
-    private val MOCK_VENUE_ID = "4c5ef77bfff99c74eda954d3"
+    private val mockLatLng = Mockito.mock(LatLng::class.java)
 
     @Before
     override fun setup() {
@@ -59,7 +59,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
     }
 
     @Test
-    fun `browse nearby restaurants success`() = runBlocking {
+    fun `search nearby restaurants success`() = runBlocking {
         enqueue(
             `mock network response with json file`(
                 HttpURLConnection.HTTP_OK,
@@ -68,8 +68,8 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(MOCK_QUERY_VENUES_MAP).asLiveData()
-            liveData.observeForever { result: List<Venue> ->
+            val liveData = repo.getVenueList(mockLatLng).asLiveData()
+            liveData.observeForever { result: List<SymbolOptions> ->
                 result.size.shouldBeGreaterThan(0)
             }
         }
@@ -78,7 +78,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
     }
 
     @Test
-    fun `browse nearby restaurants, get empty list`() = runBlocking {
+    fun `search nearby restaurants, get empty list`() = runBlocking {
         enqueue(
             `mock network response with json file`(
                 HttpURLConnection.HTTP_OK,
@@ -87,8 +87,8 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(MOCK_QUERY_VENUES_MAP).asLiveData()
-            liveData.observeForever{result:List<Venue> ->
+            val liveData = repo.getVenueList(mockLatLng).asLiveData()
+            liveData.observeForever{result:List<SymbolOptions> ->
                 result.size.shouldBeEqualTo(0)
             }
         }
@@ -106,8 +106,8 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(MOCK_QUERY_VENUES_MAP).asLiveData()
-            liveData.observeForever{result:List<Venue> ->
+            val liveData = repo.getVenueList(mockLatLng).asLiveData()
+            liveData.observeForever{result:List<SymbolOptions> ->
                 result.shouldBeEmpty()
             }
         }
@@ -125,9 +125,9 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueDetail(MOCK_VENUE_ID,MOCK_QUERY_VENUE_DETAIL_MAP).asLiveData()
+            val liveData = repo.getVenueDetail(mockLatLng).asLiveData()
             liveData.observeForever{detail:VenueDetail? ->
-                detail?.id.shouldBeEqualTo(MOCK_VENUE_ID)
+                detail?.id?.shouldNotBeNullOrBlank()
             }
         }
 
@@ -144,7 +144,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueDetail(MOCK_VENUE_ID,MOCK_QUERY_VENUE_DETAIL_MAP).asLiveData()
+            val liveData = repo.getVenueDetail(mockLatLng).asLiveData()
             liveData.observeForever{detail:VenueDetail? ->
                 detail?.shouldBeNull()
             }
