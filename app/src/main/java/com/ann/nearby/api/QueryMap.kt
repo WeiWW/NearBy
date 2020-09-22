@@ -1,7 +1,7 @@
 package com.ann.nearby.api
 
-import android.location.Location
 import com.ann.nearby.BuildConfig
+import com.mapbox.mapboxsdk.geometry.LatLng
 
 private const val FOOD_CATEGORY = "4d4b7105d754a06374d81259"
 private const val VERSION = "20190425"
@@ -12,13 +12,12 @@ private const val CHACKIN = "checkin"
 const val RADIUS = 500
 
 fun nearByRestaurantQueryMap(
-    location:Location,
-    radius: String
+    latLng: LatLng
 ): HashMap<String, String> {
     val map = baseQueryMap
     map["intent"] = CHACKIN
     map["categoryId"] = FOOD_CATEGORY
-    map["ll"] = "${location.latitude},${location.longitude}"
+    map["ll"] = "${latLng.latitude},${latLng.longitude}"
     map["radius"] = RADIUS.toString()
     return map
 }

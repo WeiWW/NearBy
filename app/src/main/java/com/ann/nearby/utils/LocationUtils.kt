@@ -88,8 +88,12 @@ fun getDistanceFromPoints(point1: Point,point2: Point) = TurfMeasurement.distanc
 )
 
 fun isDistanceLargerHalfRadius(previousLatLng: LatLng,lastLatLng: LatLng): Boolean {
-    val previousPoint = getPointFromLatlng(previousLatLng)
-    val lastPoint = getPointFromLatlng(lastLatLng)
-    val distance = getDistanceFromPoints(previousPoint,lastPoint)
+    val distance = getDistanceFromLanLngs(previousLatLng,lastLatLng)
     return (distance > RADIUS /2)
+}
+
+fun getDistanceFromLanLngs(lanLng1: LatLng,latLng2: LatLng): Double {
+    val point1 = getPointFromLatlng(lanLng1)
+    val point2 = getPointFromLatlng(latLng2)
+    return getDistanceFromPoints(point1, point2)
 }

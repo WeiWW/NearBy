@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ann.nearby.BuildConfig
 import com.ann.nearby.R
-import com.ann.nearby.api.response.Location
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.utils.*
 import com.bumptech.glide.Glide
@@ -80,15 +79,13 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
         focusLocation.setOnClickListener {
             mapboxMap.locationComponent.lastKnownLocation?.let {
                 animateCamera(mapboxMap,it)
+                viewModel.locationLiveData.postValue(latLngFormat(it))
             }
         }
         viewModel.venues.observeForever {
+            symbolManager.deleteAll()
             //display venues
-            for (venue in it) {
-                venue.location.let {location: Location ->
-                    symbolManager.create(newSymbol(location.lat, location.lng))
-                }
-            }
+            symbolManager.create(it)
         }
 
         viewModel.venueDetail.observeForever {
@@ -123,7 +120,7 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
             //camera focus device current location
             mapboxMap.locationComponent.lastKnownLocation?.let {
                 animateCamera(mapboxMap,it)
-                viewModel.locationLiveData.postValue(it)
+                viewModel.locationLiveData.postValue(latLngFormat(it))
             }
 
         } else {
@@ -171,7 +168,7 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
     override fun onMoveEnd(detector: MoveGestureDetector) {
         val lastLatlng = this.mapboxMap.cameraPosition.target
         if (isDistanceLargerHalfRadius(previousCameraPosition,lastLatlng)){
-            viewModel.locationLiveData.postValue(locationFormat(lastLatlng))
+            viewModel.locationLiveData.postValue(lastLatlng)
         }
     }
 
