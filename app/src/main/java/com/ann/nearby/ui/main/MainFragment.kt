@@ -203,8 +203,8 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
     }
 
     override fun onDestroy() {
+        mapView?.onDestroy()
         super.onDestroy()
-        mapView.onDestroy()
     }
 
 }
