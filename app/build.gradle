@@ -85,7 +85,7 @@ dependencies {
     //Koin test
     testImplementation "org.koin:koin-test:2.1.6"
     //Mockito
-    testImplementation "org.mockito:mockito-core:3.5.10"
+    testImplementation "org.mockito:mockito-core:3.5.11"
 
 
     /*ANDROID TEST*/

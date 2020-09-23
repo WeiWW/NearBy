@@ -2,8 +2,6 @@ package com.ann.nearby
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
-import com.ann.nearby.api.baseQueryMap
-import com.ann.nearby.api.nearByRestaurantQueryMap
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.di.module.venueRepoModule
 import com.ann.nearby.repo.VenueRepo
