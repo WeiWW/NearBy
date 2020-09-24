@@ -26,22 +26,21 @@ import com.mapbox.turf.TurfConstants
 import com.mapbox.turf.TurfMeasurement
 import com.mapbox.turf.TurfTransformation
 
-const val SOURCE_ID = "SOURCE_ID"
+private const val SOURCE_ID = "SOURCE_ID"
 private const val ICON_ID = "ICON_ID"
-const val LAYER_ID = "LAYER_ID"
+private const val LAYER_ID = "LAYER_ID"
 
-fun getLocationsComponentActivationOptions(
+fun Style.getLocationsComponentActivationOptions(
     context: Context,
-    style: Style
-): LocationComponentActivationOptions = LocationComponentActivationOptions.builder(context, style)
+): LocationComponentActivationOptions = LocationComponentActivationOptions.builder(context, this)
     .useDefaultLocationEngine(true)
     .build()
 
 @SuppressLint("MissingPermission")
-fun enableLocationComponent(context: Context, mapboxMap: MapboxMap, style: Style) =
-    mapboxMap.locationComponent.apply {
+fun MapboxMap.enableLocationComponent(context: Context, style: Style) =
+    this.locationComponent.run {
         // Activate with the LocationComponentActivationOptions object
-        this.activateLocationComponent(getLocationsComponentActivationOptions(context,style))
+        this.activateLocationComponent(style.getLocationsComponentActivationOptions(context))
         this.isLocationComponentEnabled = true
         // Set the component's camera mode
         this.cameraMode = CameraMode.TRACKING
@@ -49,7 +48,7 @@ fun enableLocationComponent(context: Context, mapboxMap: MapboxMap, style: Style
         this.renderMode = RenderMode.COMPASS
     }
 
-fun mapStyle(context: Context) = Style.Builder()
+fun Style.Builder.defaultStyle(context: Context) = this
     .fromUri(Style.LIGHT)
     .withSource(GeoJsonSource(SOURCE_ID))
     .withLayer(
@@ -72,41 +71,41 @@ fun newSymbol(latitude: Double, longitude: Double): SymbolOptions = SymbolOption
     .withIconSize(1.3f)
     .withDraggable(false)
 
-fun latLngFormat(location:Location) = LatLng(location)
+fun Location.latLng() = LatLng(this)
 
-fun animateCamera(mapboxMap: MapboxMap,location: Location){
-    val latLng = latLngFormat(location)
-    val position = CameraPosition.Builder().target(latLng).zoom(16.0).tilt(10.0).build()
-    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position))
+fun MapboxMap.animateCamera(location: Location){
+    val latLng = location.latLng()
+    val position
+            = CameraPosition.Builder()
+        .target(latLng)
+        .zoom(16.0)
+        .tilt(10.0).build()
+    this.animateCamera(CameraUpdateFactory.newCameraPosition(position))
 }
 
-fun getPointFromLatlng(latLng: LatLng): Point = Point.fromLngLat(latLng.longitude, latLng.latitude)
-fun getDistanceFromPoints(point1: Point, point2: Point) = TurfMeasurement.distance(
-    point1, point2,
+fun LatLng.point(): Point = Point.fromLngLat(this.longitude, this.latitude)
+
+fun Point.distance(point: Point) = TurfMeasurement.distance(this, point,
     TurfConstants.UNIT_METERS
 )
 
-fun getDistanceFromLanLngs(lanLng1: LatLng, latLng2: LatLng): Double {
-    val point1 = getPointFromLatlng(lanLng1)
-    val point2 = getPointFromLatlng(latLng2)
-    return getDistanceFromPoints(point1, point2)
-}
+/**
+ * The radius range is 450~1250 (meter), depends on camera's zoom
+ * */
+fun radius(zoom: Double) = RADIUS_BASE.times(25 - zoom)
 
-fun radius(zoom: Double) = run {
-    RADIUS_BASE.times(25 - zoom)
-}
 
-fun getTurfPolygon(
-    centerPoint: Point, radius: Double
+fun Point.getTurfPolygon(
+    radius: Double
 ): Polygon {
-    return TurfTransformation.circle(centerPoint, radius / 10, 360, TurfConstants.UNIT_KILOMETERS)
+    return TurfTransformation.circle(this, radius , 360, TurfConstants.UNIT_METERS)
 }
 
-fun fixArea(latLng: LatLng, mapboxMap: MapboxMap) {
-    val radius = radius(mapboxMap.cameraPosition.zoom)
-    val polygonArea = getTurfPolygon(getPointFromLatlng(latLng), radius)
+fun MapboxMap.fixArea(point: Point) {
+    val radius = radius(this.cameraPosition.zoom)
+    val polygonArea = point.getTurfPolygon(radius)
 
-    mapboxMap.getStyle {
+    this.getStyle {
         it.getLayerAs<SymbolLayer>(LAYER_ID)?.setFilter(Expression.within(polygonArea))
     }
 }

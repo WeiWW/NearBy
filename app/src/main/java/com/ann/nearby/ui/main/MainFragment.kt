@@ -62,8 +62,9 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
             mapboxMap.addOnMoveListener(this)
             mapboxMap.addOnMapClickListener(this)
             mapboxMap.setStyle(
-                mapStyle(requireContext())
+                Style.Builder().defaultStyle(requireContext())
             ) { style ->
+                
                 enableLocation(mapboxMap, style)
 
                 symbolManager = SymbolManager(mapView,mapboxMap,style).apply {
@@ -80,9 +81,9 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
 
         focusLocation.setOnClickListener {
             mapboxMap.locationComponent.lastKnownLocation?.let {
-                animateCamera(mapboxMap, it)
+                mapboxMap.animateCamera(it)
                 val radius = radius(mapboxMap.cameraPosition.zoom)
-                viewModel.locationLiveData.postValue(VenueRequest(radius, latLngFormat(it)))
+                viewModel.locationLiveData.postValue(VenueRequest(radius, it.latLng()))
             }
         }
         viewModel.venues.observeForever {
@@ -119,11 +120,11 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
         // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(requireContext())) {
 
-            enableLocationComponent(requireContext(), mapboxMap, style)
+            mapboxMap.enableLocationComponent(requireContext(), style)
             //camera focus device current location
             mapboxMap.locationComponent.lastKnownLocation?.let {
-                animateCamera(mapboxMap, it)
-                viewModel.locationLiveData.postValue(VenueRequest(radius(16.0), latLngFormat(it)))
+                mapboxMap.animateCamera(it)
+                viewModel.locationLiveData.postValue(VenueRequest(radius(16.0), it.latLng()))
             }
 
         } else {
@@ -172,12 +173,12 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
         val radius = radius(this.mapboxMap.cameraPosition.zoom)
         viewModel.locationLiveData.postValue(VenueRequest(radius, lastLatlng))
 
-        fixArea(lastLatlng, mapboxMap)
+        this.mapboxMap.fixArea(lastLatlng.point())
     }
 
-    override fun onMapClick(point: LatLng): Boolean {
+    override fun onMapClick(latLng: LatLng): Boolean {
         venueCard.visibility = View.GONE
-        fixArea(point,mapboxMap)
+        this.mapboxMap.fixArea(latLng.point())
         return false
     }
 

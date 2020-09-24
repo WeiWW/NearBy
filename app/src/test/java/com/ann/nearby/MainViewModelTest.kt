@@ -2,6 +2,7 @@ package com.ann.nearby
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.ann.nearby.api.request.VenueRequest
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.repo.VenueRepo
 import com.ann.nearby.repo.VenueRepoImpl
@@ -67,17 +68,19 @@ class MainViewModelTest:KoinTest {
         val observer:Observer<List<SymbolOptions>> = mock()
         viewModel.venues.observeForever(observer)
 
-        val latLng = LatLng(25.0034405, 121.5369503)
-        val expectSymbol = newSymbol(latLng.latitude, latLng.longitude)
+        val mockRequest:VenueRequest = Mockito.mock(VenueRequest::class.java)
+
+        val expectLatLng = LatLng(25.0034405, 121.5369503)
+        val expectSymbol = newSymbol(expectLatLng.latitude, expectLatLng.longitude)
 
         val venuesChannel = Channel<List<SymbolOptions>>()
         val venuesFlow = venuesChannel.consumeAsFlow()
 
         //When
-        Mockito.`when`(mockRepo.getVenueList(latLng)).thenReturn(venuesFlow)
+        Mockito.`when`(mockRepo.getVenueList(mockRequest)).thenReturn(venuesFlow)
 
         //Then
-        viewModel.locationLiveData.postValue(latLng)
+        viewModel.locationLiveData.postValue(mockRequest)
         launch {
             venuesChannel.send(listOf(expectSymbol))
         }

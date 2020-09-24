@@ -10,7 +10,6 @@ import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.api.response.VenueDetailsResponse
 import com.ann.nearby.utils.NetworkHelper
-import com.ann.nearby.utils.getDistanceFromLanLngs
 import com.ann.nearby.utils.newSymbol
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
@@ -54,14 +53,16 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
         }
     }
 
-    /*If the distance, between the cache venue and target position*,
-    is smaller than the radius, add it into result list and send them back. */
+    /*
+    * If the distance, between the cache venue and target position,
+    * is smaller than the radius, add it into result list and send them back.
+    * */
     private fun loadVenuesFromCache(targetLatLng: LatLng, radius: Double) {
         val result = mutableListOf<SymbolOptions>()
         val latLngList = cacheVenuesMap.keys
         //remove those not in radius
         latLngList.removeIf {
-            getDistanceFromLanLngs(it, targetLatLng) > radius
+            it.distanceTo(targetLatLng) > radius
         }
 
         for (latLng in latLngList) {

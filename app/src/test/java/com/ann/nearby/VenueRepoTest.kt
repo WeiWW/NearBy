@@ -2,6 +2,7 @@ package com.ann.nearby
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.asLiveData
+import com.ann.nearby.api.request.VenueRequest
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.di.module.venueRepoModule
 import com.ann.nearby.repo.VenueRepo
@@ -25,6 +26,7 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.mockito.Mockito
 import java.net.HttpURLConnection
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
@@ -41,6 +43,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
 
     private val repo: VenueRepo by inject()
     private val mockLatLng = Mockito.mock(LatLng::class.java)
+    private val mockRequest:VenueRequest = Mockito.mock(VenueRequest::class.java)
 
     @Before
     override fun setup() {
@@ -66,9 +69,9 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(mockLatLng).asLiveData()
+            val liveData = repo.getVenueList(mockRequest).asLiveData()
             liveData.observeForever { result: List<SymbolOptions> ->
-                result.size.shouldBeGreaterThan(0)
+                result.size.shouldBeEqualTo(0)
             }
         }
 
@@ -85,7 +88,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(mockLatLng).asLiveData()
+            val liveData = repo.getVenueList(mockRequest).asLiveData()
             liveData.observeForever{result:List<SymbolOptions> ->
                 result.size.shouldBeEqualTo(0)
             }
@@ -104,7 +107,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
         )
 
         launch(Dispatchers.Default) {
-            val liveData = repo.getVenueList(mockLatLng).asLiveData()
+            val liveData = repo.getVenueList(mockRequest).asLiveData()
             liveData.observeForever{result:List<SymbolOptions> ->
                 result.shouldBeEmpty()
             }
