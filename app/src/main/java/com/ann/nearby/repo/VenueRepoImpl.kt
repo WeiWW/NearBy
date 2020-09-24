@@ -33,6 +33,7 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
     @OptIn(FlowPreview::class)
     override suspend fun getVenueList(latLng: LatLng): Flow<List<SymbolOptions>> {
         val closerLatLng = getCloserLatLng(latLng)
+        //Check whether this area has searched before.
         if (closerLatLng != null) {
             loadVenuesFromCache(closerLatLng)
         } else {
@@ -40,6 +41,7 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
         }
         return browseVenuesResults.asFlow()
     }
+
     private suspend fun requestVenueList(latLng: LatLng) {
         if (!networkHelper.isNetworkConnected()) return
 
@@ -54,6 +56,8 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
         }
     }
 
+    /*Get closest location from has searched locations
+    and the return location must smaller the half of radius. */
     private fun getCloserLatLng(targetLatLng: LatLng): LatLng? {
         var closerLatLng:LatLng? = null
         var minDistance = Double.MAX_VALUE
@@ -68,9 +72,11 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
         return if(minDistance < RADIUS/2) closerLatLng else null
     }
 
+    /*If the distance, between the cache venue and target position*,
+    is smaller than the radius, add it into result list and send them back. */
     private fun loadVenuesFromCache(targetLatLng: LatLng) {
         val result = mutableListOf<SymbolOptions>()
-        val latLngList = cacheVenuesMap.keys //TODO: speed up
+        val latLngList = cacheVenuesMap.keys
         for (latLng in latLngList) {
             if (getDistanceFromLanLngs(targetLatLng, latLng) < RADIUS) {
                 val symbol = newSymbol(latLng.latitude, latLng.longitude)
@@ -92,6 +98,7 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
 
     private fun addToCache(list: List<Venue>){
         for (venue in list){
+            //Use the venue's location as the key of the map.
             val key = venue.location.let{location: Location ->
                 LatLng(location.lat,location.lng)
             }
@@ -103,6 +110,7 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
 
     @OptIn(FlowPreview::class)
     override suspend fun getVenueDetail(latLng: LatLng): Flow<VenueDetail?> {
+        //The purpose is getting venue's id
         val venue = cacheVenuesMap[latLng]
         venue?.let {
             requestVenueDetail(it)

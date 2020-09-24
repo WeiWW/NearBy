@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.location.Location
-import android.location.LocationManager
 import com.ann.nearby.R
 import com.ann.nearby.api.RADIUS
 import com.mapbox.geojson.Point
@@ -67,12 +66,6 @@ fun newSymbol(latitude: Double, longitude: Double): SymbolOptions = SymbolOption
     .withIconImage(ICON_ID)
     .withIconSize(1.3f)
     .withDraggable(false)
-
-fun locationFormat(latLng: LatLng) = Location(LocationManager.PASSIVE_PROVIDER).apply {
-    this.latitude = latLng.latitude
-    this.longitude = latLng.longitude
-    this.altitude = latLng.altitude
-}
 
 fun latLngFormat(location:Location) = LatLng(location)
 

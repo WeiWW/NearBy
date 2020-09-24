@@ -6,7 +6,7 @@ import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.repo.VenueRepo
 import com.ann.nearby.repo.VenueRepoImpl
 import com.ann.nearby.ui.main.MainViewModel
-import com.ann.nearby.utils.MainCoroutineScopeRule
+import com.ann.nearby.utils.TestCoroutineScopeRule
 import com.ann.nearby.utils.SyncTaskExecutorRule
 import com.ann.nearby.utils.newSymbol
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -39,7 +39,7 @@ class MainViewModelTest:KoinTest {
     var syncTaskExecutorRule = SyncTaskExecutorRule()
 
     @get:Rule
-    var coroutineRule = MainCoroutineScopeRule()
+    var coroutineRule = TestCoroutineScopeRule()
 
     private val mockRepo: VenueRepo = Mockito.mock(VenueRepoImpl::class.java)
     private val testModule = module {

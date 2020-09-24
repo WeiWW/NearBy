@@ -5,7 +5,7 @@ import androidx.lifecycle.asLiveData
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.di.module.venueRepoModule
 import com.ann.nearby.repo.VenueRepo
-import com.ann.nearby.utils.MainCoroutineScopeRule
+import com.ann.nearby.utils.TestCoroutineScopeRule
 import com.ann.nearby.utils.MockSeverBase
 import com.ann.nearby.utils.SyncTaskExecutorRule
 import com.ann.nearby.utils.networkTestModule
@@ -37,7 +37,7 @@ class VenueRepoTest:MockSeverBase(),KoinTest {
 
 
     @get:Rule
-    var coroutineRule = MainCoroutineScopeRule()
+    var coroutineRule = TestCoroutineScopeRule()
 
     private val repo: VenueRepo by inject()
     private val mockLatLng = Mockito.mock(LatLng::class.java)
