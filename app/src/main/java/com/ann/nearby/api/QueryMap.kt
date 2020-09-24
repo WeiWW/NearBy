@@ -9,16 +9,18 @@ private const val VERSION = "20190425"
  * (or, for userless requests, a typical user) is likely to checkin to at the provided ll
  * , at the current moment in time.**/
 private const val CHACKIN = "checkin"
-const val RADIUS = 500
+const val RADIUS_BASE:Double = 50.toDouble()
+const val MIN_RADIUS = 450.0
 
 fun nearByRestaurantQueryMap(
-    latLng: LatLng
+    latLng: LatLng,
+    radius: Double
 ): HashMap<String, String> {
     val map = baseQueryMap
     map["intent"] = CHACKIN
     map["categoryId"] = FOOD_CATEGORY
     map["ll"] = "${latLng.latitude},${latLng.longitude}"
-    map["radius"] = RADIUS.toString()
+    map["radius"] = radius.toString()
     return map
 }
 

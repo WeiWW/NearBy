@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.ann.nearby.BuildConfig
 import com.ann.nearby.R
+import com.ann.nearby.api.request.VenueRequest
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.utils.*
 import com.bumptech.glide.Glide
@@ -36,7 +37,6 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
     private lateinit var mapboxMap: MapboxMap
     private lateinit var permissionsManager: PermissionsManager
     private lateinit var symbolManager: SymbolManager
-    private var previousCameraPosition:LatLng = LatLng(0.0,0.0,0.0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +46,10 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.main_fragment, container, false)
     }
 
@@ -78,8 +80,9 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
 
         focusLocation.setOnClickListener {
             mapboxMap.locationComponent.lastKnownLocation?.let {
-                animateCamera(mapboxMap,it)
-                viewModel.locationLiveData.postValue(latLngFormat(it))
+                animateCamera(mapboxMap, it)
+                val radius = radius(mapboxMap.cameraPosition.zoom)
+                viewModel.locationLiveData.postValue(VenueRequest(radius, latLngFormat(it)))
             }
         }
         viewModel.venues.observeForever {
@@ -119,8 +122,8 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
             enableLocationComponent(requireContext(), mapboxMap, style)
             //camera focus device current location
             mapboxMap.locationComponent.lastKnownLocation?.let {
-                animateCamera(mapboxMap,it)
-                viewModel.locationLiveData.postValue(latLngFormat(it))
+                animateCamera(mapboxMap, it)
+                viewModel.locationLiveData.postValue(VenueRequest(radius(16.0), latLngFormat(it)))
             }
 
         } else {
@@ -160,20 +163,21 @@ class MainFragment : Fragment(), PermissionsListener, MapboxMap.OnMoveListener,M
 
     override fun onMoveBegin(detector: MoveGestureDetector) {
         venueCard.visibility = View.GONE
-        this.previousCameraPosition = this.mapboxMap.cameraPosition.target
     }
 
     override fun onMove(detector: MoveGestureDetector) {}
 
     override fun onMoveEnd(detector: MoveGestureDetector) {
         val lastLatlng = this.mapboxMap.cameraPosition.target
-        if (isDistanceLargerHalfRadius(previousCameraPosition,lastLatlng)){
-            viewModel.locationLiveData.postValue(lastLatlng)
-        }
+        val radius = radius(this.mapboxMap.cameraPosition.zoom)
+        viewModel.locationLiveData.postValue(VenueRequest(radius, lastLatlng))
+
+        fixArea(lastLatlng, mapboxMap)
     }
 
     override fun onMapClick(point: LatLng): Boolean {
         venueCard.visibility = View.GONE
+        fixArea(point,mapboxMap)
         return false
     }
 

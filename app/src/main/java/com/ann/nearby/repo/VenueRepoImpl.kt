@@ -1,9 +1,10 @@
 package com.ann.nearby.repo
 
 import com.ann.nearby.api.ApiService
-import com.ann.nearby.api.RADIUS
+import com.ann.nearby.api.MIN_RADIUS
 import com.ann.nearby.api.baseQueryMap
 import com.ann.nearby.api.nearByRestaurantQueryMap
+import com.ann.nearby.api.request.VenueRequest
 import com.ann.nearby.api.response.Location
 import com.ann.nearby.api.response.Venue
 import com.ann.nearby.api.response.VenueDetail
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import kotlin.collections.set
 
 @ExperimentalCoroutinesApi
 class VenueRepoImpl:VenueRepo,KoinComponent {
@@ -28,72 +30,46 @@ class VenueRepoImpl:VenueRepo,KoinComponent {
     private val browseVenuesResults = ConflatedBroadcastChannel<List<SymbolOptions>>()
     private val venueDetailResult = ConflatedBroadcastChannel<VenueDetail?>()
     private val cacheVenuesMap:LinkedHashMap<LatLng,Venue> = linkedMapOf()
-    private val hasSearchedLatLngList: MutableList<LatLng> = mutableListOf()
 
     @OptIn(FlowPreview::class)
-    override suspend fun getVenueList(latLng: LatLng): Flow<List<SymbolOptions>> {
-        val closerLatLng = getCloserLatLng(latLng)
-        //Check whether this area has searched before.
-        if (closerLatLng != null) {
-            loadVenuesFromCache(closerLatLng)
-        } else {
-            requestVenueList(latLng)
-        }
+    override suspend fun getVenueList(venueRequest: VenueRequest): Flow<List<SymbolOptions>> {
+        loadVenuesFromCache(venueRequest.latLng, venueRequest.radius)
+        requestVenueList(venueRequest)
         return browseVenuesResults.asFlow()
     }
 
-    private suspend fun requestVenueList(latLng: LatLng) {
+    private suspend fun requestVenueList(venueRequest: VenueRequest) {
         if (!networkHelper.isNetworkConnected()) return
 
-        val queryMap = nearByRestaurantQueryMap(latLng)
+        // If radius smaller than 500, not to request
+        if (venueRequest.radius < MIN_RADIUS) return
+        val queryMap = nearByRestaurantQueryMap(venueRequest.latLng, venueRequest.radius)
         val response = apiService.browseNearByVenues(queryMap)
         if (!response.isSuccessful || response.body() == null) return
+
         response.body()?.let { venueListResponse ->
             val venueList = venueListResponse.response.venues
             addToCache(venueList)
-            hasSearchedLatLngList.add(latLng)
-            browseVenuesResults.offer(transformVenueToSymbol(venueList))
+            loadVenuesFromCache(venueRequest.latLng, venueRequest.radius)
         }
-    }
-
-    /*Get closest location from has searched locations
-    and the return location must smaller the half of radius. */
-    private fun getCloserLatLng(targetLatLng: LatLng): LatLng? {
-        var closerLatLng:LatLng? = null
-        var minDistance = Double.MAX_VALUE
-
-        for(latLng in hasSearchedLatLngList){
-            val distance = getDistanceFromLanLngs(targetLatLng,latLng)
-            if(distance < minDistance){
-                minDistance = distance
-                closerLatLng = latLng
-            }
-        }
-        return if(minDistance < RADIUS/2) closerLatLng else null
     }
 
     /*If the distance, between the cache venue and target position*,
     is smaller than the radius, add it into result list and send them back. */
-    private fun loadVenuesFromCache(targetLatLng: LatLng) {
+    private fun loadVenuesFromCache(targetLatLng: LatLng, radius: Double) {
         val result = mutableListOf<SymbolOptions>()
         val latLngList = cacheVenuesMap.keys
-        for (latLng in latLngList) {
-            if (getDistanceFromLanLngs(targetLatLng, latLng) < RADIUS) {
-                val symbol = newSymbol(latLng.latitude, latLng.longitude)
-                result.add(symbol)
-            }
+        //remove those not in radius
+        latLngList.removeIf {
+            getDistanceFromLanLngs(it, targetLatLng) > radius
         }
-        browseVenuesResults.offer(result)
-    }
 
-    private fun transformVenueToSymbol(list: List<Venue>): MutableList<SymbolOptions> {
-        val result = mutableListOf<SymbolOptions>()
-        for (venue in list) {
-            venue.location.let { location: Location ->
-                result.add(newSymbol(location.lat, location.lng))
-            }
+        for (latLng in latLngList) {
+            val symbol = newSymbol(latLng.latitude, latLng.longitude)
+            result.add(symbol)
         }
-        return result
+
+        browseVenuesResults.offer(result)
     }
 
     private fun addToCache(list: List<Venue>){

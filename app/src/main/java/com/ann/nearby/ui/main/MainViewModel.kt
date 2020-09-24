@@ -1,6 +1,7 @@
 package com.ann.nearby.ui.main
 
 import androidx.lifecycle.*
+import com.ann.nearby.api.request.VenueRequest
 import com.ann.nearby.api.response.VenueDetail
 import com.ann.nearby.repo.VenueRepo
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -11,10 +12,10 @@ import org.koin.core.inject
 class MainViewModel : ViewModel(),KoinComponent {
     private val repo:VenueRepo by inject()
 
-    val locationLiveData = MutableLiveData<LatLng>()
-    val venues: LiveData<List<SymbolOptions>> = locationLiveData.switchMap { latLng: LatLng ->
+    val locationLiveData = MutableLiveData<VenueRequest>()
+    val venues: LiveData<List<SymbolOptions>> = locationLiveData.switchMap { venueRequest: VenueRequest ->
         liveData {
-            val data = repo.getVenueList(latLng).asLiveData()
+            val data = repo.getVenueList(venueRequest).asLiveData()
             emitSource(data)
         }
     }
